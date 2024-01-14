@@ -1,6 +1,9 @@
 
 import cv2
 
+from flask import Flask
+from flask_restful import Resource, Api
+
 # initialize the HOG descriptor/person detector
 hog = cv2.HOGDescriptor()
 hog.setSVMDetector(cv2.HOGDescriptor_getDefaultPeopleDetector())
@@ -20,3 +23,17 @@ print(f'Found {len(rects)} humans')
 # show the output images
 cv2.imshow("People detector", image)
 cv2.waitKey(0)
+
+
+
+app = Flask(__name__)
+api = Api(app)
+
+class HumanDetector(Resource):
+    def get(self):
+        return {'PeopleCount':  3}
+
+api.add_resource(HumanDetector, '/')
+
+if __name__ == '__main__':
+    app.run(debug=True)
